@@ -15,6 +15,8 @@
         validate_certs: False
         user: "{{ lookup('env', 'GH_USER') | default(omit) }}"
         password: "{{ lookup('env', 'GH_TOKEN') | default(omit) }}"
+      environment:
+        https_proxy: "{{ promtail_https_proxy }}"
       no_log: "{{ not lookup('env', 'ANSIBLE_DEBUG') | bool }}"
       register: _latest_release
       until: _latest_release.status == 200
@@ -26,14 +28,19 @@
   when:
     - promtail_version == "latest"
 
-- name: "Get checksum list"
-  set_fact:
-    __promtail_checksums: "{{ lookup('url', 'https://github.com/grafana/loki/releases/download/v' + promtail_version + '/SHA256SUMS', wantlist=True) | list }}"
-  run_once: True
-
-- name: "Get checksum for {{ go_arch }} architecture"
-  set_fact:
-    __promtail_checksum: "{{ item.split(' ')[0] }}"
-  with_items: "{{ __promtail_checksums }}"
-  when:
-    - "('promtail-linux-' + go_arch + '.zip') in item"
+#- name: "Get checksum list"
+#  set_fact:
+#    __promtail_checksums: "{{ lookup('url', 'https://github.com/grafana/loki/releases/download/v' + promtail_version + '/SHA256SUMS', wantlist=True, use_proxy='yes') | list }}"
+#  environment:
+#    https_proxy: "{{ promtail_https_proxy }}"
+#    http_proxy: "{{ promtail_https_proxy }}"
+#    HTTPS_PROXY: "{{ promtail_https_proxy }}"
+#    HTTP_PROXY: "{{ promtail_https_proxy }}"
+#  run_once: True
+#
+#- name: "Get checksum for {{ go_arch }} architecture"
+#  set_fact:
+#    __promtail_checksum: "{{ item.split(' ')[0] }}"
+#  with_items: "{{ __promtail_checksums }}"
+#  when:
+#    - "('promtail-linux-' + go_arch + '.zip') in item"

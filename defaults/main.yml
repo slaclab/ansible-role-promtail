@@ -2,6 +2,7 @@
 promtail_apt_update_cache: True
 promtail_version: "2.6.1"
 promtail_dist_url: "https://github.com/grafana/loki/releases/download/v{{ promtail_version }}/promtail-linux-{{ go_arch }}.zip"
+promtail_https_proxy: "http://sdfproxy.sdf.slac.stanford.edu:3128"
 promtail_custom_checksum: ""
 promtail_config_dir: /etc/promtail
 promtail_config_file_sd_dir: "{{ promtail_config_dir }}/file_sd"
@@ -22,7 +23,7 @@ promtail_log_level: info
 promtail_config_server:
   http_listen_port: 9080
 
-promtail_loki_server_url: http://127.0.0.1:3100
+promtail_loki_server_url: http://172.24.5.224:80
 promtail_config_clients:
   - url: "{{ promtail_loki_server_url }}/loki/api/v1/push"
 
