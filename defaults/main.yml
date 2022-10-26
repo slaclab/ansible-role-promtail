@@ -21,7 +21,9 @@ promtail_log_level: info
 # One of: debug, info, warn, error
 
 promtail_config_server:
+  disable: false
   http_listen_port: 9080
+  grpc_listen_port: 9096
 
 promtail_loki_server_url: http://172.24.5.224:80
 promtail_config_clients:
